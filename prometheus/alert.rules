@@ -1,0 +1,29 @@
+groups: 
+- name: example
+  rules:
+  - alert: PrometheusTargetMissing
+    expr: up == 0
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Prometheus target missing (instance {{ $labels.instance }})"
+      description: "A Prometheus target has disappeared. An exporter might be crashed. VALUE = {{ $value }}  LABELS: {{ $labels }}"
+  - alert: http-200-fail
+    expr: probe_http_status_code {instance="https://lms.skillfactory.ru"} != 200
+    for: 5m
+    labels:
+      severity: high
+    annotations:
+      summary: "HTTP 200 Fail"
+      description: "HTTP status code other than \"200\" has been returned"
+      value_str: "HTTP STATUS:{{ $value }}"
+  - alert: duration http
+    expr: sum(probe_http_duration_seconds{instance="https://lms.skillfactory.ru"}) > 5
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Probe http duration > 5s"
+      description: ">_< - we all die"
+ 
